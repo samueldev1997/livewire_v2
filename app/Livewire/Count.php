@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use Livewire\Component;
 
 class Count extends Component
@@ -10,16 +11,34 @@ class Count extends Component
 
     public function render()
     {
-        return view('livewire.count');
+        return view('livewire.count', [
+            'users' => User::all()
+        ]);
     }
 
-    public function toogle()
+    public function submit()
     {
-        if($this->name[0] === str($this->name[0])->upper()->toString()){
-            $this->name = str($this->name)->lower();
+        User::factory()->create([
+            'name' => $this->name
+        ]);
+    }
+
+    public function send()
+    {
+        $this->emitTo(
+            'todo', 
+            'mudaai',
+            $this->name,
+        );
+    }
+
+    public function toogle($type)
+    {
+        if($type === 'upper'){
+            $this->name = str($this->name)->upper();
 
         } else {
-            $this->name = str($this->name)->upper();
+            $this->name = str($this->name)->lower();
 
         }
     }
